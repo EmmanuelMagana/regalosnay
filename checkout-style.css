@@ -1,0 +1,15 @@
+.style_reg{
+    background: transparent;
+    border: transparent;
+    border-bottom: solid 1px black;
+    font: oblique 16px cursive ;
+    color:  black;
+    height: 30px;
+    padding: 3px;
+    width: 150px;
+}
+
+.pr{
+    font: oblique 16px cursive ;
+    color:  rgb(160, 160, 160);
+}
