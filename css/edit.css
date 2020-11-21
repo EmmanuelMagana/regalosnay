@@ -1,0 +1,78 @@
+#container{
+	padding: 90px 15px 15px;
+}
+
+.form_register{
+	width: 450px;
+	margin: auto;
+}
+
+.form_register h1{
+	color: royalblue;
+}
+
+hr{
+	border: 0;
+	background: #ccc;
+	height: 1px;
+	margin: 10px 0;
+	display: block;
+}
+
+form{
+	background: #fff;
+	margin: auto;
+	padding: 20px 50px;
+	border: 1px solid #d1d1d1;
+}
+
+label{
+    display: block;
+    font-size: 10pt;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 5px auto 2px auto;
+}
+
+input,select{
+    display: block;
+    width: 100%;
+    font-size: 11pt;
+    padding: 4px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
+
+.btn_save{
+    font-size: 11pt;
+    background: rgb(57, 173, 57);
+    padding: 10px;
+    color: white;
+    letter-spacing: 1px;
+    border: 0;
+    cursor: pointer;
+    margin: 15px auto;
+}
+
+
+.data_delete h2{
+    text-align: center;
+    font-size: 12pt;
+}
+.data_delete span{
+    font-weight: bold;
+    font-size: 12pt;
+    color: red;
+}
+.btn_can,.btn_ok{
+    width: 124px;
+    background: rgb(0, 110, 255);
+    color: white;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 15px;
+}
+.btn_can{
+    background: rgb(3, 187, 3);
+}
