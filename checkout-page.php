@@ -1,6 +1,6 @@
 <?php
         include "conection/conection.php";
-      
+      $i=0;
       if(!empty($_POST))
       {
         $alert = '';
@@ -28,7 +28,8 @@
           $imgProducto  =   'img_producto';
 
           if($nombre_foto != ''){
-            $imgProducto  = 'img/uploads/'.'img_'.date('d m Y').'.jpg';
+            $i++;
+            $imgProducto  = 'img/uploads/'.'img_'.$i.'.jpg';
           }
 
             $query_insert = mysqli_query($enlace,"INSERT INTO producto(marca,nombre,descripcion,existencia,precio,tipo,edad,genero,foto)  VALUES('$marca','$nombre','$descripcion','$cantidad','$precio','$tipo','$edad','$genero','$imgProducto')");
@@ -203,7 +204,7 @@
               <button class="btn btn-primary btn-lg btn-block" type="submit">Registrar</button>
 
             </form>
-
+        <a href="lista_producto.php">lista</a>
           </div>
           <!--/.Card-->
 

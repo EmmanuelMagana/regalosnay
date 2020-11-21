@@ -12,6 +12,7 @@
 </head>
 <body>
     <section>
+    <h1>Listas productos</h1>
         <table>
             <tr>
                 <th>ID</th>
@@ -56,5 +57,6 @@
             ?>
         </table>
     </section>
+    
 </body>
 </html>
