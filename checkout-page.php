@@ -1,6 +1,6 @@
 <?php
         include "conection/conection.php";
-  
+
       if(!empty($_POST))
       {
         $alert = '';
@@ -30,6 +30,7 @@
           if($nombre_foto != ''){
             $imgProducto  = 'img_'.date('D h m s').$nombre_foto;
             $destino = 'img/uploads/'.$imgProducto;
+
           }
 
             $query_insert = mysqli_query($enlace,"INSERT INTO producto(marca,nombre,descripcion,existencia,precio,tipo,edad,genero,foto)  VALUES('$marca','$nombre','$descripcion','$cantidad','$precio','$tipo','$edad','$genero','$imgProducto')");

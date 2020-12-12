@@ -186,13 +186,7 @@
                       <div id="form_alert"></div>
               </div>
                 <hr>
-                <center>
-              <div>
-              <a href="lista_producto.php" class="btn btn-outline-info btn-sm">Cancelar</a>
-              
-              <input type="submit" value="Actualizar" class="btn btn-outline-success btn-sm">
-              </div>
-              </center>
+              <input class="btn_save" type="submit" value="Actualizar">
 
             </form>
         </div>
