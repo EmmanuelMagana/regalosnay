@@ -1,6 +1,6 @@
 <?php
-        include "../conection/conection.php";
-      $i=0;
+        include "conection/conection.php";
+  
       if(!empty($_POST))
       {
         $alert = '';
@@ -25,18 +25,18 @@
           $type         =   $_FILES['foto']['type'];
           $url_temp     =   $_FILES['foto']['tmp_name'];
 
-          $imgProducto  =   'img_producto';
+          $imgProducto  =   'img_producto.png';
 
           if($nombre_foto != ''){
-            $i++;
-            $imgProducto  = 'img/uploads/'.'img_'.$i.'.jpg';
+            $imgProducto  = 'img_'.date('D h m s').$nombre_foto;
+            $destino = 'img/uploads/'.$imgProducto;
           }
 
             $query_insert = mysqli_query($enlace,"INSERT INTO producto(marca,nombre,descripcion,existencia,precio,tipo,edad,genero,foto)  VALUES('$marca','$nombre','$descripcion','$cantidad','$precio','$tipo','$edad','$genero','$imgProducto')");
 
             if($query_insert){
                 if($nombre_foto != ''){
-                    move_uploaded_file($url_temp,$imgProducto);
+                    move_uploaded_file($url_temp,$destino);
                 }
                 $alert  =    '<p class="msg_save">Producto registrado correctamente.</p>';
             }else{
@@ -55,18 +55,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <title>Registro Producto</title>
-  <link rel="stylesheet" href="../css/checkout-page.css">
+  <link rel="stylesheet" href="css/checkout-page.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <!-- Bootstrap core CSS -->
-  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
   <!-- Material Design Bootstrap -->
-  <link href="../css/mdb.min.css" rel="stylesheet">
+  <link href="css/mdb.min.css" rel="stylesheet">
   <!-- Your custom styles (optional) -->
-  <link href="../css/style.min.css" rel="stylesheet">
+  <link href="css/style.min.css" rel="stylesheet">
 </head>
 
-<body class="grey lighten-3">
+<body>
 
   <!-- Navbar -->
    <!-- Navbar -->
@@ -201,10 +201,15 @@
               
 
               <hr class="mb-4">
-              <button class="btn btn-primary btn-lg btn-block" type="submit">Registrar</button>
-
+              <center>
+              <div>
+              <a href="lista_producto.php" class="btn btn-outline-info btn-sm">Ver Lista</a>
+              
+              <input type="submit" value="Aceptar" class="btn btn-outline-success btn-sm">
+              </div>
+              </center>
             </form>
-        <a href="lista_producto.php">lista</a>
+
           </div>
           <!--/.Card-->
 
@@ -217,19 +222,19 @@
 
   <!-- SCRIPTS -->
   <!-- JQuery -->
-  <script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="../js/popper.min.js"></script>
+  <script type="text/javascript" src="js/popper.min.js"></script>
   <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
   <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="../js/mdb.min.js"></script>
+  <script type="text/javascript" src="js/mdb.min.js"></script>
   <!-- Initializations -->
   <script type="text/javascript">
     // Animations initialization
     new WOW().init();
   </script>
-  <script defer src="../js/function.js" ></script>
+  <script defer src="js/function.js" ></script>
 </body>
 
 </html>

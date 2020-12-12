@@ -5,6 +5,12 @@
     if(!empty($_POST)){
 
         $id = $_POST['id'];
+        $sql_delete    =   mysqli_query($enlace,"SELECT foto from producto where id=$id"); 
+            while($result_delete  =   mysqli_fetch_array($sql_delete)){
+                if($result_delete != 'img_producto.png'){
+                    unlink('img/uploads/'.$result_delete['foto']);
+                }
+            }
         $query_delete = mysqli_query($enlace,"delete from producto where id = $id");
 
         if($query_delete){
@@ -29,10 +35,10 @@
                 $nombre =   $data['nombre'];
                 $descripcion =   $data['descripcion'];
                 $marca =   $data['marca'];
-                if($data['foto'] == 'img_producto.png' || $data['foto'] == ''){
+                if($data['foto'] == 'img_producto.png'){
                     $foto = 'img/img_producto.png';
                 }else{
-                    $foto = 'img/uploads/'.$data['foto'];
+                    $foto = "img/uploads/".$data['foto'];
                 }
                 
             }
@@ -68,7 +74,7 @@
             <p>Nombre : <span class="text-primary "><?php echo $nombre; ?></span></p>
             <p>Descripcion : <span><?php echo $descripcion; ?></span></p>
             <p>Marca : <span><?php echo $marca; ?></span></p>
-            <p>Foto : <span><img width="300px" src="<?php echo $foto; ?>" alt="<?php echo $data['nombre']; ?>"></span></p>
+            <p><span><img width="300px" src="<?php echo $foto; ?>" alt="<?php echo $data['nombre']; ?>"></span></p>
             <form method="post" action="">
                 <input type="hidden" name="id" value="<?php echo $id; ?>">
                 <a href="lista_producto.php" class="btn_can">Cancelar</a>

@@ -19,12 +19,20 @@
 <body>
     <section class="container-fluid">
 
+    <?php 
+    
+    $busqueda = strtolower($_REQUEST['busqueda']);
+    if(empty($busqueda)){
+        header("location: lista_producto.php");
+    }
+    ?>
+
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <h1 class="text-white mr-4" >Listas productos</h1>
         <a href="checkout-page.php" class="btn btn-outline-info btn-sm">Crear producto</a>
         <form class="form-inline ml-auto" action="buscar_producto.php" method="get">
-            <input class="form-control mr-sm-2" type="text" placeholder="Buscar" name="busqueda" id="busqueda">
-            <button class="btn btn-success btn-sm" type="submit">Buscar</button>
+            <input class="form-control mr-sm-2" type="text" placeholder="Buscar" name="busqueda" id="busqueda" value="<?php echo $busqueda; ?>">
+            <input type="submit" class="btn btn-success btn-sm" value="Buscar">
         </form>
     </nav>
        <br>
@@ -42,7 +50,8 @@
             <?php
                 //paginador
 
-                $sql_regite = mysqli_query($enlace,"SELECT COUNT(*) as total from producto");
+                $sql_regite = mysqli_query($enlace,"SELECT COUNT(*) as total from producto where (id like '%$busqueda%' or nombre like '%$busqueda%' or descripcion like '%$busqueda%' or existencia like '%$busqueda%' or precio like '%$busqueda%')");
+
                 $result_register = mysqli_fetch_array($sql_regite);
                 $total_registro = $result_register["total"];
                 $por_pagina = 2;
@@ -54,10 +63,9 @@
                 $desde = ($pag -1) * $por_pagina;
                 $total_pag = ceil($total_registro / $por_pagina);
 
-                $query  =   mysqli_query($enlace,"SELECT id,nombre,descripcion,existencia,precio,foto from producto 
-                order by id asc limit $desde,$por_pagina");
+                $query = mysqli_query($enlace,"SELECT id,nombre,descripcion,existencia,precio,foto from producto where (id like '%$busqueda%' or nombre like '%$busqueda%' or descripcion like '%$busqueda%' or existencia like '%$busqueda%' or precio like '%$busqueda%') order by id asc limit $desde,$por_pagina");
 
-                $result =   mysqli_num_rows($query);
+                $result =  mysqli_num_rows($query);
 
                 if($result > 0){
                     while($data    =    mysqli_fetch_array($query)){
@@ -87,7 +95,9 @@
             ?>
         </table>
         <?php 
-        if($total_registro != 0){
+        
+        if($total_registro != 0)
+            {
         ?>
         <hr>
         <nav aria-label="...">
@@ -96,7 +106,7 @@
                 if($pag != 1){
             ?>
                 <li class="page-item">
-                <a class="page-link" href="?pag=<?php echo $pag -1; ?>" >Previous</a>
+                <a class="page-link" href="?pag=<?php echo $pag -1; ?>&busqueda=<?php echo $busqueda; ?>" >Previous</a>
                 </li>
                 <?php
                 }
@@ -104,19 +114,21 @@
                         if($i == $pag){
                             echo '<li class="page-item active"><a class="page-link" '.$i.'">'.$i.'</a></li>';
                         }else{
-                            echo '<li class="page-item"><a class="page-link" href="?pag='.$i.'">'.$i.'</a></li>';
+                            echo '<li class="page-item"><a class="page-link" href="?pag='.$i.'&busqueda='.$busqueda.'">'.$i.'</a></li>';
                         }
                     }
 
                     if($pag != $total_pag){
                 ?>
                 <li class="page-item">
-                <a class="page-link" href="?pag=<?php echo $pag +1; ?>">Next</a>
+                <a class="page-link" href="?pag=<?php echo $pag +1; ?>&busqueda=<?php echo $busqueda; ?>">Next</a>
                 </li>
                     <?php  } ?>
             </ul>
         </nav>
-                    <?php } ?>
+        <?php 
+            }
+        ?>
     </section>
     
 </body>

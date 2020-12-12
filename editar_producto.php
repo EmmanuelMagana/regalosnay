@@ -1,86 +1,92 @@
 <?php
         include "conection/conection.php";
-      
-      if(!empty($_POST))
-      {
-        $alert = '';
-        if(empty($_POST['marca']) || empty($_POST['nombre']) || empty($_POST['descripcion']) || empty($_POST['precio']) || empty($_POST['tipo']) || empty($_POST['edad']) || empty($_POST['genero']))
-        {
-          $alert    =    '<p class="msg_error> Todos los campos son obligatorios.</p>';
-        }else
-        {
-            
-          $id   =   $_POST['id'];
-          $marca  = $_POST['marca'];
-          $nombre = $_POST['nombre'];
-          $descripcion  = $_POST['descripcion'];
-          $precio = $_POST['precio'];
-          $tipo = $_POST['tipo'];
-          $edad = $_POST['edad'];
-          $genero = $_POST['genero'];
-
-          $foto =   $_FILES['foto'];
-          $nombre_foto  =   $_FILES['foto']['name'];
-          $type         =   $_FILES['foto']['type'];
-          $url_temp     =   $_FILES['foto']['tmp_name'];
-
-          $imgProducto  =   'img_producto';
-
-          $query    =   mysqli_query($enlace,"select * from producto where (id  !=   '$id' and nombre =   '$nombre'");
-          $result   =   mysqli_fetch_array($query);
-
-          if($result > 0){
-            $alert    =    '<p class="msg_error> Ya se encuentra en existencia.</p>';
-          }else{
-              
-                $sql_update =   mysqli_query($enlace,"update producto set nombre = '$nombre',descripcion = '$descripcion', precio = '$precio',tipo = '$tipo',marca = '$marca',edad = '$edad',genero = '$genero',foto = '$foto'");
-
-                if($nombre_foto != ''){
-                    $imgProducto  = 'img/uploads/'.'img_'.date('d m Y').'.jpg';
-                }
-
-                    $query_insert = mysqli_query($enlace,"INSERT INTO producto(marca,nombre,descripcion,existencia,precio,tipo,edad,genero,foto)  VALUES('$marca','$nombre','$descripcion','$cantidad','$precio','$tipo','$edad','$genero','$imgProducto')");
-
-                    if($query_insert){
-                        if($nombre_foto != ''){
-                            move_uploaded_file($url_temp,$imgProducto);
-                        }
-                        $alert  =    '<p class="msg_save">Producto actualizado correctamente.</p>';
-                    }else{
-                        $alert  =    '<p class="msg_error">Error al actualizado el producto.</p>';
-                    }
-            }
-          }
-        }
 
     if(empty($_GET['id'])){
         header('location: lista_producto.php');
-    }
-    $id =   $_GET['id'];
-
-    $sql    =   mysqli_query($enlace,"select id,nombre,descripcion,precio,tipo,marca,edad,genero,foto from producto where id=$id");
-    $result_sql  =   mysqli_num_rows($sql);
-
-    if($result_sql  ==  0){
-        header('location: lista_producto.php');
     }else{
-        while($data =   mysqli_fetch_array($sql)){
-            $id =   $data['id'];
-            $nombre =   $data['nombre'];
-            $descripcion =   $data['descripcion'];
-            $precio =   $data['precio'];
-            $tipo =   $data['tipo'];
-            $marca =   $data['marca'];
-            $edad =   $data['edad'];
-            $genero =   $data['genero'];
-            if($data['foto'] == 'img_producto.png' || $data['foto'] == ''){
-              $foto = 'img/img_producto.png';
-            }else{
-              $foto = 'img/uploads/'.$data['foto'];
-            }
-            
+        $id =   $_GET['id'];
+        if(!is_numeric($id)){
+          header('location: lista_producto.php');
         }
-    }
+
+        $sql    =   mysqli_query($enlace,"select id,nombre,descripcion,precio,tipo,marca,edad,genero,foto from producto where id=$id");
+        $result_sql  =   mysqli_num_rows($sql);
+
+        $fotos = '';
+        $remove='notBlock';
+        if($result_sql  >  0){
+            $data_producto = mysqli_fetch_assoc($sql);
+
+            if($data_producto['foto'] != 'img_producto.png'){
+              $remove = '';
+              $fotos = '<img id="img"  src="img/uploads/'.$data_producto['foto'].'"alt = "producto">';
+            }else{
+              $remove = '';
+              $fotos = '<img id="img"  src="img/'.$data_producto['foto'].'"alt = "producto">';
+            }
+
+        }else{
+            header('location: lista_producto.php');
+        }
+
+      }
+     
+    if(!empty($_POST))
+    {
+      $alert = '';
+      if(empty($_POST['marca']) || empty($_POST['nombre']) || empty($_POST['descripcion']) || empty($_POST['precio']) || empty($_POST['tipo']) || empty($_POST['edad']) || empty($_POST['genero']))
+      {
+        $alert    =    '<p class="msg_error> Todos los campos son obligatorios.</p>';
+      }else
+      {
+            
+        $id   =   $_POST['id'];
+        $marca  = $_POST['marca'];
+        $nombre = $_POST['nombre'];
+        $descripcion  = $_POST['descripcion'];
+        $precio = $_POST['precio'];
+        $tipo = $_POST['tipo'];
+        $edad = $_POST['edad'];
+        $genero = $_POST['genero'];
+
+        $foto =   $_FILES['foto'];
+        $nombre_foto  =   $_FILES['foto']['name'];
+        $type         =   $_FILES['foto']['type'];
+        $url_temp     =   $_FILES['foto']['tmp_name'];
+
+
+        $imgProducto  =   'img_producto.jpg';
+
+        $query    =   mysqli_query($enlace,"select * from producto where id  !=   '$id' ");
+        $result   =   mysqli_fetch_array($query);
+       
+        if($result != 0){
+          $alert    =    '<p class="msg_error> Ya se encuentra en existencia.</p>'; 
+        }else{
+            
+
+              if($nombre_foto != ''){
+                $imgProducto  = 'img_'.date('D h m s').$nombre_foto;
+                $destino = 'img/uploads/'.$imgProducto;
+              }elseif($data_producto['foto'] != ''){
+                $imgProducto=$data_producto['foto'];
+              }
+              
+              $sql_update =   mysqli_query($enlace,"update producto set nombre = '$nombre',descripcion = '$descripcion', precio = '$precio',tipo = '$tipo',marca = '$marca',edad = '$edad',genero = '$genero',foto = '$imgProducto' where id='$id'");
+              
+                  if($sql_update){ 
+                      if($nombre_foto != ''){ 
+                          move_uploaded_file($url_temp,$destino);
+                          unlink('img/uploads/'.$data_producto['foto']);
+                      }
+                      $alert  =    '<p class="msg_save">Producto actualizado correctamente.</p>';
+                  }else{
+                      $alert  =    '<p class="msg_error">Error al actualizado el producto.</p>';
+                  } 
+                  header('location: lista_producto.php');
+          }
+        }
+      }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -105,20 +111,23 @@
             <h1>Editar Producto</h1>
             <hr>
             <div class="alert"><?php echo isset($alert) ? $alert : ''; ?></div>
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data" class="card-body">
                 <input type="hidden" name="id" value="<?php echo $id ?>">
+                <div>
                 <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo $nombre; ?>">
-
+                <input type="text" id="nombre" name="nombre" value="<?php echo $data_producto['nombre']; ?>">
+                </div>
+                <div>
                 <label for="descripcion">Descripcion</label>
-                <input type="text" id="descripcion" name="descripcion" value="<?php echo $descripcion; ?>">
-                
+                <input type="text" id="descripcion" name="descripcion" value="<?php echo $data_producto['descripcion']; ?>">
+                </div>
+                <div>
                 <label for="precio">Precio</label>
-                <input type="number" id="precio" name="precio" step="any" value="<?php echo $precio; ?>">
-
+                <input type="number" id="precio" name="precio" step="any" value="<?php echo $data_producto['precio']; ?>">
+                </div>
                 <div>
                     <label for="tipo">Tipo</label>
-                    <select id="tipo" name="tipo" value="<?php echo $tipo; ?>" required>
+                    <select id="tipo" name="tipo" value="<?php echo $data_producto['tipo']; ?>" required>
                     <option>z</option>
                     <option>s</option>
                     </select>
@@ -129,9 +138,9 @@
 
                 <div>
                     <label for="marca">Marca</label>
-                    <select id="marca" name="marca" value="<?php echo $marca; ?>" required>
-                    <option>z</option>
-                    <option>s</option>
+                    <select id="marca" name="marca" value="<?php echo $data_producto['marca']; ?>" required>
+                    <option>ppp</option>
+                    <option></option>
                     </select>
                     <div class="invalid-feedback">
                         Seleccione un marca.
@@ -140,7 +149,7 @@
 
                 <div>
                     <label for="edad">Edad recomendada</label>
-                    <select id="edad" name="edad" value="<?php echo $edad; ?>" required>
+                    <select id="edad" name="edad" value="<?php echo $data_producto['edad']; ?>" required>
                     <option>0-3</option>
                     <option>3-5</option>
                     </select>
@@ -151,7 +160,7 @@
 
                 <div>
                     <label for="genero">Genero</label>
-                    <select id="genero" name="genero" value="<?php echo $genero; ?>" required>
+                    <select id="genero" name="genero" value="<?php echo $data_producto['genero']; ?>" required>
                     <option>Niño</option>
                     <option>Niña</option>
                     </select>
@@ -167,16 +176,23 @@
                   <label for="foto">Foto</label>
                 </center>
                       <div class="prevPhoto">
-                        <span class="delPhoto notBlock">X</span>
-                        <label for="foto"></label>
+                        <span class="delPhoto <?php  echo $remove; ?>">X</span>
+                        <label for="foto" ></label>
+                        <?php echo $fotos;  ?>
                       </div>
                       <div class="upimg">
-                        <input type="file" name="foto" id="foto" value="<?php echo $foto; ?>">
+                        <input type="file" name="foto" id="foto" >
                       </div>
                       <div id="form_alert"></div>
               </div>
                 <hr>
-              <input class="btn_save" type="submit" value="Actualizar">
+                <center>
+              <div>
+              <a href="lista_producto.php" class="btn btn-outline-info btn-sm">Cancelar</a>
+              
+              <input type="submit" value="Actualizar" class="btn btn-outline-success btn-sm">
+              </div>
+              </center>
 
             </form>
         </div>
